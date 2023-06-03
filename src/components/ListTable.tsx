@@ -22,7 +22,7 @@ function ListTable({
 
   const [herSelectedTask, setHerSelectedTask] = useState(-1);
   const [HisSelectedTask, setHisSelectedTask] = useState(-1);
-  const [updatedTask, setUpdatedTask] = useState("")
+  const [updatedTask, setUpdatedTask] = useState("");
 
   tasks.map((task) =>
     task.whoseTask === "his" ? hisTasks.push(task) : herTasks.push(task)
@@ -75,7 +75,9 @@ function ListTable({
                       className="text-indigo-500"
                       onChange={(e) => setUpdatedTask(e.target.value)}
                     />
-                    <button onClick={() => onUpdateTask(task.id!, updatedTask)}>Update Task</button>
+                    <button onClick={() => onUpdateTask(task.id!, updatedTask)}>
+                      Update Task
+                    </button>
                   </div>
                 </div>
               </div>
@@ -121,7 +123,9 @@ function ListTable({
                       className="text-indigo-500"
                       onChange={(e) => setUpdatedTask(e.target.value)}
                     />
-                    <button onClick={() => onUpdateTask(task.id!, updatedTask)}>Update Task</button>
+                    <button className="mr-2" onClick={() => onUpdateTask(task.id!, updatedTask)}>
+                      Update Task
+                    </button>
                   </div>
                 </div>
               </div>
