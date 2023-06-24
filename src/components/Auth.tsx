@@ -1,12 +1,9 @@
 import { useState } from "react";
+import { auth, googleProvider } from "../config/firebase";
 import {
-  auth,
-  // googleProvider
-} from "../config/firebase";
-import {
-  // createUserWithEmailAndPassword,
-  // signOut,
-  // signInWithPopup,
+  createUserWithEmailAndPassword,
+  signOut,
+  signInWithPopup,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
@@ -17,49 +14,50 @@ interface Props {
   isLoggedIn: Function;
 }
 
-function Auth({ isLoggedIn }: Props) {
+function Auth({isLoggedIn}: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // const register = async () => {
-  //   try {
-  //     await createUserWithEmailAndPassword(auth, email, password);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const register = async () => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const signIn = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      isLoggedIn();
+      isLoggedIn()
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+
+  const signInWithGoogle = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // const signInWithGoogle = async () => {
-  //   try {
-  //     await signInWithPopup(auth, googleProvider);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const logOut = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  // const logOut = async () => {
-  //   try {
-  //     await signOut(auth);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // const logOutFromGoogle = async () => {
-  //   try {
-  //     await signOut(auth);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  const logOutFromGoogle = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="w-full sm:w-[400px] px-5 mx-auto mt-16 text-center">
@@ -114,10 +112,9 @@ function Auth({ isLoggedIn }: Props) {
             Reset Your Password
           </a> */}
       </div>
-      <button
+      <button 
         className="btn-primary w-full flex items-center justify-center mt-3 bg-purple-800 text-white py-2 px-3 rounded hover:bg-purple-600 active:bg-purple-700 transition-colors shadow-md shadow-[#103];"
-        onClick={signIn}
-      >
+        onClick={signIn}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
