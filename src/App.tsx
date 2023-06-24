@@ -138,6 +138,16 @@ function App() {
           <button onClick={logOut} className="text-2xl text-indigo-700">
             Logout
           </button>
+
+          <div>
+          <label htmlFor="file-upload"></label>
+          <input
+            type="file"
+            id="file-upload"
+            onChange={(e) => setFileUpload(e.target.files?.[0] || null)}
+            />
+          <button onClick={uploadFile}>Upload File</button>
+          </div>
         </div>
       )}
     </div>
