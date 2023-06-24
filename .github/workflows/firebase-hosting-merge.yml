@@ -18,3 +18,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_HIS_AND_HER_TODO_APP }}'
           channelId: live
           projectId: his-and-her-todo-app
+ 
