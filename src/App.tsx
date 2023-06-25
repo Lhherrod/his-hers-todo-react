@@ -104,7 +104,6 @@ function App() {
 
   useEffect(() => {
     getTasks();
-
     // persist loggedIn user hack until I get busy with Redux or some store
     setTimeout(() => {
       auth?.currentUser?.email && setIsLoggedIn(true);
@@ -112,19 +111,9 @@ function App() {
   }, []);
 
   return (
-    // will decide where to place this later
-    // <div>
-    //  <label htmlFor="file-upload"></label>
-    //  <input
-    //   type="file"
-    //   id="file-upload"
-    //   onChange={(e) => setFileUpload(e.target.files?.[0] || null)}
-    //   />
-    //  <button onClick={uploadFile}>Upload File</button>
-    // </div>
     <div className="container lg:w-2/3 mx-auto py-5">
       {!isLoggedIn ? (
-        <Auth isLoggedIn={handleIsLoggedIn} />
+        <Auth onLoggedIn={handleIsLoggedIn} />
       ) : (
         <div>
           <ListTable
@@ -138,15 +127,15 @@ function App() {
           <button onClick={logOut} className="text-2xl text-indigo-700">
             Logout
           </button>
-
+          {/* will decide were to place this later */}
           <div>
-          <label htmlFor="file-upload"></label>
-          <input
-            type="file"
-            id="file-upload"
-            onChange={(e) => setFileUpload(e.target.files?.[0] || null)}
+            <label htmlFor="file-upload"></label>
+            <input
+              type="file"
+              id="file-upload"
+              onChange={(e) => setFileUpload(e.target.files?.[0] || null)}
             />
-          <button onClick={uploadFile}>Upload File</button>
+            <button onClick={uploadFile}>Upload File</button>
           </div>
         </div>
       )}
