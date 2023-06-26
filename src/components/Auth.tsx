@@ -30,18 +30,28 @@ function Auth({ onLoggedIn }: Props) {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       onLoggedIn();
-    } catch (error) {
+    } catch (error: any) {
+      setError(error.message)
+      setTimeout(() => {setError("")},3000)
       console.error(error);
     }
   };
+
   const signIn = async (email: string, password: string) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       onLoggedIn();
-    } catch (error) {
+    } catch (error: any) {
+      setError(error.message)
+      setTimeout(() => {setError("")},3000)
       console.error(error);
     }
   };
+
+  const [error, setError] = useState("");
+
+
+  
 
   // const signInWithGoogle = async () => {
   //   try {
@@ -55,7 +65,6 @@ function Auth({ onLoggedIn }: Props) {
     <div className="w-full sm:w-[400px] px-5 mx-auto mt-16 text-center">
       {showLogin ? (
         <div>
-          {" "}
           <h2 className="text-2xl font-semibold mb-2 text-orange-300">
             Login to access todos
           </h2>
@@ -69,7 +78,8 @@ function Auth({ onLoggedIn }: Props) {
               create new one...
             </a>
           </p>
-          <Login sendLoginIn={signIn} />
+          <h1 className="text-red-500">{error}</h1>
+          <Login sendLogin={signIn} />
         </div>
       ) : (
         <div>
@@ -87,6 +97,7 @@ function Auth({ onLoggedIn }: Props) {
               already have an account?..
             </a>
           </p>
+          <h1 className="text-red-500">{error}</h1>
           <Register sendRegister={signUp} />
         </div>
       )}

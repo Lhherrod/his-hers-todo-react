@@ -4,10 +4,19 @@ interface Props {
   sendRegister: (email: string, password: string) => object;
 }
 
+
+
 export const Register = ({ sendRegister }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [confirmedPassword, setConfirmPassword] = useState("");
+  const [confirmedPassword, setConfirmPassword] = useState("");
+
+  const handleSendRegister = () => {
+    if(password !== confirmedPassword) {
+      return;
+    }
+    sendRegister(email, password)
+  }
 
   return (
     <>
@@ -23,6 +32,7 @@ export const Register = ({ sendRegister }: Props) => {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
+      {password !== confirmedPassword && <h1 className="text-red-500 text-left">The password and password confirmation does not match...</h1>}
       <div className="mb-3">
         <label className="mr-2 text-orange-300" htmlFor="register-password">
           Password
@@ -35,7 +45,7 @@ export const Register = ({ sendRegister }: Props) => {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      {/* <div className="mb-3">
+      <div className="mb-3">
         <label className="mr-2 text-orange-300" htmlFor="password-confirm">
           Confirm Password
         </label>
@@ -46,7 +56,7 @@ export const Register = ({ sendRegister }: Props) => {
           className="w-full rounded border-orange-300 focus:border-orange-300 focus:ring-orange-300"
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
-      </div> */}
+      </div>
       <div className="flex justify-between mb-3">
         {/* <div className="flex items-center">
         <label className="mr-2 text-orange-300" htmlFor="remember-me">
@@ -58,16 +68,10 @@ export const Register = ({ sendRegister }: Props) => {
           className="text-orange-300 focus:ring-orange-300"
         />
       </div> */}
-        <a
-          href="/src/password-reset.html"
-          className="text-orange-300 hover:text-orange-200"
-        >
-          Reset Your Password
-        </a>
       </div>
       <button
         className="btn-primary w-full flex items-center justify-center mt-3 bg-purple-800 text-white py-2 px-3 rounded hover:bg-purple-600 active:bg-purple-700 transition-colors shadow-md shadow-[#103];"
-        onClick={() => sendRegister(email, password)}
+        onClick={() => handleSendRegister()}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

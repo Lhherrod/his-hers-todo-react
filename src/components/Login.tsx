@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 interface Props {
-  sendLoginIn: (email: string, password: string) => object;
+  sendLogin: (email: string, password: string) => object;
 }
 
-export const Login = ({ sendLoginIn }: Props) => {
+export const Login = ({ sendLogin }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -54,7 +54,7 @@ export const Login = ({ sendLoginIn }: Props) => {
       </div>
       <button
         className="btn-primary w-full flex items-center justify-center mt-3 bg-purple-800 text-white py-2 px-3 rounded hover:bg-purple-600 active:bg-purple-700 transition-colors shadow-md shadow-[#103];"
-        onClick={() => sendLoginIn(email, password)}
+        onClick={() => sendLogin(email, password)}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
