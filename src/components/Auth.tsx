@@ -27,31 +27,37 @@ function Auth({ onLoggedIn }: Props) {
   };
 
   const signUp = async (email: string, password: string) => {
+    setLoading(!loading);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       onLoggedIn();
     } catch (error: any) {
-      setError(error.message)
-      setTimeout(() => {setError("")},3000)
+      setLoading(loading);
+      setError(error.message);
+      setTimeout(() => {
+        setError("");
+      }, 3000);
       console.error(error);
     }
   };
 
   const signIn = async (email: string, password: string) => {
+    setLoading(!loading);
     try {
       await signInWithEmailAndPassword(auth, email, password);
       onLoggedIn();
     } catch (error: any) {
-      setError(error.message)
-      setTimeout(() => {setError("")},3000)
+      setLoading(loading);
+      setError(error.message);
+      setTimeout(() => {
+        setError("");
+      }, 3000);
       console.error(error);
     }
   };
 
   const [error, setError] = useState("");
-
-
-  
+  const [loading, setLoading] = useState(false);
 
   // const signInWithGoogle = async () => {
   //   try {
@@ -79,11 +85,10 @@ function Auth({ onLoggedIn }: Props) {
             </a>
           </p>
           <h1 className="text-red-500">{error}</h1>
-          <Login sendLogin={signIn} />
+          <Login sendLogin={signIn} isLoading={loading} />
         </div>
       ) : (
         <div>
-          {" "}
           <h2 className="text-2xl font-semibold mb-2 text-orange-300">
             Register to create todos
           </h2>
@@ -98,12 +103,12 @@ function Auth({ onLoggedIn }: Props) {
             </a>
           </p>
           <h1 className="text-red-500">{error}</h1>
-          <Register sendRegister={signUp} />
+          <Register sendRegister={signUp} isLoading={loading} />
         </div>
       )}
       {/* <button onClick={signInWithGoogle}>Sign In With Google</button>
       <button onClick={logOutFromGoogle} classNameName="ml-3">
-         Logout From Google
+        Logout From Google
       </button> */}
     </div>
   );
