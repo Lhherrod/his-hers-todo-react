@@ -35,7 +35,6 @@ export const Register = ({ sendRegister, isLoading }: Props) => {
 
   const onSubmit = (data: Data) => {
     sendRegister(data.email, data.password);
-    console.log(data);
   };
 
   return (

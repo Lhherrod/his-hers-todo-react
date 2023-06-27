@@ -31,7 +31,6 @@ export const Login = ({ sendLogin, isLoading }: Props) => {
 
   const onSubmit = (data: Data) => {
     sendLogin(data.email, data.password);
-    console.log(data);
   };
 
   return (
