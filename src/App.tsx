@@ -10,10 +10,10 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import Auth from "./components/Auth";
-import ListTable from "./components/ListTable";
 import { ref, uploadBytes } from "firebase/storage";
 import { signOut } from "firebase/auth";
+import Auth from "./components/Auth";
+import ListTable from "./components/ListTable";
 
 function App() {
   const [tasks, setTasks] = useState<NewTaskType[]>([]);
