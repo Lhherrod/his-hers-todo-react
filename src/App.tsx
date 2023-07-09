@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { db, auth, storage } from "./config/firebase";
 import { NewTaskType } from "./types/tasks";
 import { AddTask } from "./components/AddTask";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import {
   getDocs,
   collection,
@@ -14,6 +15,10 @@ import { ref, uploadBytes } from "firebase/storage";
 import { signOut } from "firebase/auth";
 import Auth from "./components/Auth";
 import ListTable from "./components/ListTable";
+import TodosList from "./features/todos/TodosList";
+// import AddTodoForm from "./features/todos/AddTodoForm";
+
+
 
 function App() {
   const [tasks, setTasks] = useState<NewTaskType[]>([]);
@@ -112,6 +117,18 @@ function App() {
 
   return (
     <div className="container lg:w-2/3 mx-auto py-5">
+      {/* <AddTodoForm/> */}
+       <Router>
+          <div>
+            {/* <Navba /> */}
+          </div>
+          <Routes>
+            {/* <Route path="/" element={<Home />} /> */}
+            <Route path="/todos" element={<TodosList />} />
+            {/* <Route path="/about" element={<About />} /> */}
+            <Route path="/*" element={<h1>No route found...</h1>} />
+          </Routes>
+        </Router>
       {!isLoggedIn ? (
         <Auth onLoggedIn={handleIsLoggedIn} />
       ) : (
