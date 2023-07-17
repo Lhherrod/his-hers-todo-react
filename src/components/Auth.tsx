@@ -1,115 +1,42 @@
-import { useState } from "react";
-import {
-  auth,
-  // googleProvider
-} from "../config/firebase";
-import {
-  createUserWithEmailAndPassword,
-  // signInWithPopup,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { initializeApp } from "firebase/app";
+import { useEffect, useState } from "react";
 import Login from "./Login";
 import Register from "./Register";
+import { useAppSelector } from "../hooks/storeHook";
+import { useDispatch } from "react-redux";
+import { openLogin } from "../features/auth/authSlice";
 
-initializeApp;
+function Auth() {
+  const { isOpened, isClosed } = useAppSelector((state) => state.auth);
+  const [isLoading, setIsLoading] = useState(true);
 
-interface Props {
-  onLoggedIn: Function;
-}
+  const dispatch = useDispatch();
 
-function Auth({ onLoggedIn }: Props) {
-  const [showLogin, setShowLogin] = useState(true);
-
-  const handleAuthView = (e: any) => {
-    e.preventDefault();
-    showLogin ? setShowLogin(false) : setShowLogin(true);
-  };
-
-  const signUp = async (email: string, password: string) => {
-    setLoading(!loading);
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      onLoggedIn();
-    } catch (error: any) {
-      setLoading(loading);
-      setError(error.message);
-      setTimeout(() => {
-        setError("");
-      }, 3000);
-      console.error(error);
-    }
-  };
-
-  const signIn = async (email: string, password: string) => {
-    setLoading(!loading);
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      onLoggedIn();
-    } catch (error: any) {
-      setLoading(loading);
-      setError(error.message);
-      setTimeout(() => {
-        setError("");
-      }, 3000);
-      console.error(error);
-    }
-  };
-
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  // const signInWithGoogle = async () => {
-  //   try {
-  //     await signInWithPopup(auth, googleProvider);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+      dispatch(openLogin());
+    }, 1000);
+  }, []);
 
   return (
-    <div className="w-full sm:w-[400px] px-5 mx-auto mt-16 text-center">
-      {showLogin ? (
-        <div>
-          <h2 className="text-2xl font-semibold mb-2 text-orange-300">
-            Login to access todos
-          </h2>
-          <p className="mb-4 text-indigo-800">
-            <span> or </span>
-            <a
-              href="/src/signup.html"
-              className="signup-button"
-              onClick={handleAuthView}
-            >
-              create new one...
-            </a>
-          </p>
-          <h1 className="text-red-500">{error}</h1>
-          <Login sendLogin={signIn} isLoading={loading} />
-        </div>
-      ) : (
-        <div>
-          <h2 className="text-2xl font-semibold mb-2 text-orange-300">
-            Register to create todos
-          </h2>
-          <p className="mb-4 text-indigo-800">
-            <span> or </span>
-            <a
-              href="/src/signup.html"
-              className="signup-button"
-              onClick={handleAuthView}
-            >
-              already have an account?..
-            </a>
-          </p>
-          <h1 className="text-red-500">{error}</h1>
-          <Register sendRegister={signUp} isLoading={loading} />
+    <div className="my-auto flex items-center justify-center h-screen">
+      {isLoading && <p>Loading... 😀 Please wait...</p>}
+
+      {!isLoading && (
+        <div className="w-full">
+          {isOpened && (
+            <div>
+              <Login />
+            </div>
+          )}
+
+          {isClosed && (
+            <div>
+              <Register />
+            </div>
+          )}
         </div>
       )}
-      {/* <button onClick={signInWithGoogle}>Sign In With Google</button>
-      <button onClick={logOutFromGoogle} classNameName="ml-3">
-        Logout From Google
-      </button> */}
     </div>
   );
 }
