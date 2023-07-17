@@ -24,13 +24,12 @@ const Login = () => {
   const [resetPasswordSuccess, setresetPasswordSuccess] = useState<
     string | null
   >(null);
-  const [resetPasswordError, setresetPasswordError] = useState<string | null>(
+  const [resetPasswordError, setResetPasswordError] = useState<string | null>(
     null
   );
   const [displayResponsive, setDisplayResponsive] = useState(false);
   const [errorMessage, setErrorMessge] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [position, setPosition] = useState("center");
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState<ResetPasswordInterface>();
 
@@ -42,12 +41,8 @@ const Login = () => {
     [key: string]: Dispatch<SetStateAction<boolean>>;
   }
 
-  const onClick = (name: string, position = "") => {
+  const onClick = (name: string) => {
     dialogFuncMap[`${name}`](true);
-
-    if (position) {
-      setPosition(position);
-    }
   };
 
   const handlePasswordReset = async (data: ResetPasswordInterface) => {
@@ -61,7 +56,7 @@ const Login = () => {
       onHide("displayResponsive");
     } catch (error: any) {
       setIsLoading(false);
-      setErrorMessge(error);
+      setResetPasswordError(error);
       const errorCode = error.code;
       setErrorMessge(errorCode);
     }
@@ -95,7 +90,7 @@ const Login = () => {
 
   const {
     control,
-    register,
+    // register,
     formState: { errors },
     handleSubmit,
     reset,
@@ -112,8 +107,8 @@ const Login = () => {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       if (user && user.email) {
         // will set this up later
-        // setFormData(data);
-        // setShowMessage(true);
+        setFormData(data);
+        setShowMessage(true);
         reset();
         dispatch(
           login({

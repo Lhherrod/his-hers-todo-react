@@ -42,19 +42,20 @@ export const AddTodoForm = ({ isLoading, handleCreateTodo }: Props) => {
 
   const {
     control,
-    register,
+    // register,
     formState: { errors },
     handleSubmit,
-    reset,
+    // reset,
   } = useForm({
     defaultValues,
     resolver: yupResolver(addTodoSchema),
   });
 
   // dont forget to fix this
-  const onSubmit = async (data: AddTodo) => {   
+  const onSubmit = async (data: AddTodo) => {
     try {
-      await handleCreateTodo(data) 
+      await handleCreateTodo(data);
+      setFormData(data);
     } catch (error: any) {
       setErrorMessge(error);
       const errorCode = error.code;

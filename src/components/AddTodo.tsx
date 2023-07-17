@@ -11,10 +11,8 @@ interface Props {
 
 const Modal = ({ whoseTodo }: Props) => {
   const [displayResponsive, setDisplayResponsive] = useState(false);
-  const [errorMessage, setErrorMessge] = useState<null | string>(null);
   const [addTodo] = useCreateTodoMutation();
   const [isLoading, setIsLoading] = useState(false);
-  const [position, setPosition] = useState("center");
 
   const dialogFuncMap: dialogFuncMapTypes = {
     displayResponsive: setDisplayResponsive,
@@ -24,12 +22,8 @@ const Modal = ({ whoseTodo }: Props) => {
     [key: string]: Dispatch<SetStateAction<boolean>>;
   }
 
-  const onClick = (name: string, position = null) => {
+  const onClick = (name: string) => {
     dialogFuncMap[`${name}`](true);
-
-    if (position) {
-      setPosition(position);
-    }
   };
 
   const handleCreateTodo = async (data: AddTodo) => {
@@ -40,9 +34,6 @@ const Modal = ({ whoseTodo }: Props) => {
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
-      setErrorMessge(error);
-      const errorCode = error.code;
-      setErrorMessge(errorCode);
     }
   };
 

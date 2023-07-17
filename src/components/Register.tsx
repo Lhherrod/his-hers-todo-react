@@ -28,7 +28,7 @@ const Register = () => {
 
   const {
     control,
-    register,
+    // register,
     formState: { errors },
     handleSubmit,
     reset,
@@ -71,7 +71,6 @@ const Register = () => {
     }
   };
 
-
   const getFormErrorMessage = (name: string) => {
     if (name === "email") {
       return <small className="p-error">{errors?.email?.message}</small>;
@@ -80,7 +79,9 @@ const Register = () => {
       return <small className="p-error">{errors?.password?.message}</small>;
     }
     if (name === "confirmPassword") {
-      return <small className="p-error">{errors?.confirmPassword?.message}</small>;
+      return (
+        <small className="p-error">{errors?.confirmPassword?.message}</small>
+      );
     }
 
     // return (

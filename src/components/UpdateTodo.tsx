@@ -11,10 +11,8 @@ interface Props {
 
 const UpdateTodo = ({ todo }: Props) => {
   const [displayResponsive, setDisplayResponsive] = useState(false);
-  const [errorMessage, setErrorMessge] = useState<null | string>(null);
   const [updateTodo] = useUpdateTodoMutation();
   const [isLoading, setIsLoading] = useState(false);
-  const [position, setPosition] = useState("center");
 
   const dialogFuncMap: dialogFuncMapTypes = {
     displayResponsive: setDisplayResponsive,
@@ -32,18 +30,11 @@ const UpdateTodo = ({ todo }: Props) => {
       onHide("displayResponsive");
     } catch (error: any) {
       setIsLoading(false);
-      setErrorMessge(error);
-      const errorCode = error.code;
-      setErrorMessge(errorCode);
     }
   };
 
-  const onClick = (name: string, position = null) => {
+  const onClick = (name: string) => {
     dialogFuncMap[`${name}`](true);
-
-    if (position) {
-      setPosition(position);
-    }
   };
 
   const onHide = (name: string) => {

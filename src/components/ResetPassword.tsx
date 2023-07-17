@@ -21,38 +21,12 @@ interface ResetPasswordProps {
 }
 
 const ResetPassword: FC<ResetPasswordProps> = (props) => {
-  const [displayResponsive, setDisplayResponsive] = useState(false);
   const [errorMessage, setErrorMessge] = useState<null | string>(null);
-  const [position, setPosition] = useState("center");
   const [showMessage, setShowMessage] = useState(false);
   const [formData, setFormData] = useState<ResetPasswordInterface>();
 
-  const dialogFuncMap: dialogFuncMapTypes = {
-    displayResponsive: setDisplayResponsive,
-  };
-
-  interface dialogFuncMapTypes {
-    [key: string]: Dispatch<SetStateAction<boolean>>;
-  }
-
-  const onClick = (name: string, position = "") => {
-    dialogFuncMap[`${name}`](true);
-
-    if (position) {
-      setPosition(position);
-    }
-  };
-
-  const onHide = (name: string) => {
-    dialogFuncMap[`${name}`](false);
-  };
-
   const {
     handlePasswordReset,
-    resetPasswordEmail,
-    resetPasswordSuccess,
-    resetPasswordError,
-    setresetPasswordEmail,
   } = props;
 
   const defaultValues = {
@@ -61,10 +35,10 @@ const ResetPassword: FC<ResetPasswordProps> = (props) => {
 
   const {
     control,
-    register,
+    // register,
     formState: { errors },
     handleSubmit,
-    reset,
+    // reset,
   } = useForm({
     defaultValues,
     resolver: yupResolver(resetPasswordFormSchema),
@@ -76,6 +50,7 @@ const ResetPassword: FC<ResetPasswordProps> = (props) => {
     }
     try {
       await handlePasswordReset(data);
+      setFormData(data)
     } catch (error: any) {
       setErrorMessge(error);
       const errorCode = error.code;

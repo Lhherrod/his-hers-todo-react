@@ -4,7 +4,6 @@ import { Button } from "primereact/button";
 
 const Modal = () => {
   const [displayResponsive, setDisplayResponsive] = useState(false);
-  const [position, setPosition] = useState("center");
 
   const dialogFuncMap: dialogFuncMapTypes = {
     displayResponsive: setDisplayResponsive,
@@ -14,12 +13,8 @@ const Modal = () => {
     [key: string]: Dispatch<SetStateAction<boolean>>;
   }
 
-  const onClick = (name: string, position = null) => {
+  const onClick = (name: string) => {
     dialogFuncMap[`${name}`](true);
-
-    if (position) {
-      setPosition(position);
-    }
   };
 
   const onHide = (name: string) => {
@@ -57,8 +52,7 @@ const Modal = () => {
           visible={displayResponsive}
           onHide={() => onHide("displayResponsive")}
           footer={renderFooter("displayResponsive")}
-        >
-        </Dialog>
+        ></Dialog>
       </div>
     </div>
   );
