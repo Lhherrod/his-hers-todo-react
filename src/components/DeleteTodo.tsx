@@ -11,10 +11,8 @@ interface Props {
 
 const DeleteTodo = ({ todoId, whoseTodo }: Props) => {
   const [displayResponsive, setDisplayResponsive] = useState(false);
-  const [errorMessage, setErrorMessge] = useState<null | string>(null);
   const [deleteTodo] = useDeleteTodoMutation();
   const [isLoading, setIsLoading] = useState(false);
-  const [position, setPosition] = useState("center");
 
   const dialogFuncMap: dialogFuncMapTypes = {
     displayResponsive: setDisplayResponsive,
@@ -24,12 +22,8 @@ const DeleteTodo = ({ todoId, whoseTodo }: Props) => {
     [key: string]: Dispatch<SetStateAction<boolean>>;
   }
 
-  const onClick = (name: string, position = "") => {
+  const onClick = (name: string) => {
     dialogFuncMap[`${name}`](true);
-
-    if (position) {
-      setPosition(position);
-    }
   };
 
   const handleDeleteTodo = async () => {
@@ -40,9 +34,6 @@ const DeleteTodo = ({ todoId, whoseTodo }: Props) => {
       onHide("displayResponsive");
     } catch (error: any) {
       setIsLoading(false);
-      setErrorMessge(error);
-      const errorCode = error.code;
-      setErrorMessge(errorCode);
     }
   };
 
