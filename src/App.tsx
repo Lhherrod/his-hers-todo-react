@@ -1,161 +1,104 @@
 import { useState, useEffect } from "react";
-import { db, auth, storage } from "./config/firebase";
-import { NewTaskType } from "./types/tasks";
-import { AddTask } from "./components/AddTask";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import {
-  getDocs,
-  collection,
-  addDoc,
-  deleteDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
-import { ref, uploadBytes } from "firebase/storage";
-import { signOut } from "firebase/auth";
+import { auth } from "./config/firebase";
+
+import { Routes, Route, useNavigate } from "react-router-dom";
+
 import Auth from "./components/Auth";
-import ListTable from "./components/ListTable";
-import TodosList from "./features/todos/TodosList";
-// import AddTodoForm from "./features/todos/AddTodoForm";
+import "primereact/resources/themes/lara-dark-indigo/theme.css";
+import "primereact/resources/primereact.min.css"; //core css
+import "primeicons/primeicons.css"; //icons
+import Home from "./pages/Home";
+import Header from "./components/Header";
+import Profile from "./pages/Profile";
+import { useAppDispatch } from "./hooks/storeHook";
+import { login } from "./features/auth/authSlice";
+import AuthRoutes from "./components/HOC/AuthRoutes";
+import GuestRoutes from "./components/HOC/GuestRoutes";
+import Todos from "./pages/Todos";
+import { MenuItem } from "primereact/menuitem";
+import * as nav from "../public/data/navitems";
 
-
+interface MenuObj {
+  label: string | undefined;
+  items?: MenuItem[];
+  icon: string;
+  command: () => void;
+}
 
 function App() {
-  const [tasks, setTasks] = useState<NewTaskType[]>([]);
-  const tasksCollection = collection(db, "tasks");
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const handleHerSelectedTask = (task: NewTaskType) => {
-    console.log(task);
-  };
+  const [newMenu, setNewMenu] = useState<MenuItem[]>([]);
 
-  const handleHisSelectedTask = (task: NewTaskType) => {
-    console.log(task);
-  };
+  const getMenuObject = (menu: MenuItem) => {
+    let menuObj = {} as MenuObj;
 
-  const handleDeleteTask = async (id: string) => {
-    const taskDoc = doc(db, "tasks", id);
-    await deleteDoc(taskDoc);
-    getTasks();
-  };
+    menuObj.label = menu.label;
 
-  const handleUpdateTask = async (id: string, task: string) => {
-    const taskDoc = doc(db, "tasks", id);
-    await updateDoc(taskDoc, { description: task });
-    getTasks();
-  };
-
-  const handleIsLoggedIn = () => {
-    console.log(isLoggedIn);
-    isLoggedIn ? setIsLoggedIn(false) : setIsLoggedIn(true);
-    console.log(isLoggedIn);
-  };
-
-  const getTasks = async () => {
-    try {
-      const data = await getDocs(tasksCollection);
-      const filteredData = data.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-      setTasks(filteredData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleNewTaskWhoseTask = async (
-    newTaskDescription: string,
-    newTaskWhoseTask: string,
-    newTaskComplete: boolean
-  ) => {
-    try {
-      await addDoc(tasksCollection, {
-        description: newTaskDescription,
-        whoseTask: newTaskWhoseTask,
-        complete: newTaskComplete,
-        createdAt: new Date(),
-        userId: auth.currentUser?.uid,
+    if (menu.items) {
+      //if the navigation has items property then map each item and call itself again
+      menuObj.items = menu.items.map((nestedItem: MenuItem) => {
+        return getMenuObject(nestedItem);
       });
-
-      [getTasks()];
-    } catch (error) {
-      console.error(error);
     }
+
+    if (menu.icon) {
+      menuObj.icon = menu.icon;
+    }
+
+    if (menu.url) {
+      menuObj.command = () => {
+        navigate(menu.url!);
+      };
+    }
+    // this value is returned to navigation menu
+    return menuObj;
   };
 
-  const uploadFile = async () => {
-    if (!fileUpload) {
-      return;
-    }
-    const filesFolderRef = ref(storage, `projectFiles/${fileUpload.name}`);
-    try {
-      await uploadBytes(filesFolderRef, fileUpload);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const logOut = async () => {
-    try {
-      await signOut(auth);
-      handleIsLoggedIn();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [fileUpload, setFileUpload] = useState<File | null>(null);
+  const navigationMenu = newMenu.map((menuItem) => {
+    return getMenuObject(menuItem);
+  });
 
   useEffect(() => {
-    getTasks();
-    // persist loggedIn user hack until I get busy with Redux or some store
-    setTimeout(() => {
-      auth?.currentUser?.email && setIsLoggedIn(true);
-    }, 200);
-  }, []);
+    // will always need to this keep close to nav
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      let newMenu: MenuItem[];
+      if (user && user.email) {
+        dispatch(
+          login({
+            email: user.email,
+            id: user.uid,
+            photoUrl: user?.photoURL || null,
+          })
+        );
+        newMenu = nav.navItems.filter(function (navItem) {
+          return navItem.label !== "Login";
+        });
+        setNewMenu(newMenu);
+      } else {
+        newMenu = nav.navItems.filter(function (navItem) {
+          return navItem.label !== "Profile";
+        });
+        setNewMenu(newMenu);
+      }
+    });
+    return () => unsubscribe();
+  }, [dispatch]);
 
   return (
-    <div className="container lg:w-2/3 mx-auto py-5">
-      {/* <AddTodoForm/> */}
-       <Router>
-          <div>
-            {/* <Navba /> */}
-          </div>
-          <Routes>
-            {/* <Route path="/" element={<Home />} /> */}
-            <Route path="/todos" element={<TodosList />} />
-            {/* <Route path="/about" element={<About />} /> */}
-            <Route path="/*" element={<h1>No route found...</h1>} />
-          </Routes>
-        </Router>
-      {!isLoggedIn ? (
-        <Auth onLoggedIn={handleIsLoggedIn} />
-      ) : (
-        <div>
-          <ListTable
-            tasks={tasks}
-            onSelectHerTask={handleHerSelectedTask}
-            onSelectHisTask={handleHisSelectedTask}
-            onDeleteTask={handleDeleteTask}
-            onUpdateTask={handleUpdateTask}
-          />
-          <AddTask onSetNewTaskWhoseTask={handleNewTaskWhoseTask} />
-          <button onClick={logOut} className="text-2xl text-indigo-700">
-            Logout
-          </button>
-          {/* will decide were to place this later */}
-          <div>
-            <label htmlFor="file-upload"></label>
-            <input
-              type="file"
-              id="file-upload"
-              onChange={(e) => setFileUpload(e.target.files?.[0] || null)}
-            />
-            <button onClick={uploadFile}>Upload File</button>
-          </div>
-        </div>
-      )}
+    <div className="mx-auto max-w-7xl">
+      {<Header navigationMenu={navigationMenu} />}
+      <Routes>
+        <Route element={<AuthRoutes />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+        <Route path="/" element={<Home />} />
+        <Route element={<GuestRoutes />}>
+          <Route path="/auth" element={<Auth />} />
+        </Route>
+        <Route path="/todos" element={<Todos />} />
+      </Routes>
     </div>
   );
 }
