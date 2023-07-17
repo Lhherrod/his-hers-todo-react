@@ -17,6 +17,7 @@ import GuestRoutes from "./components/HOC/GuestRoutes";
 import Todos from "./pages/Todos";
 import { MenuItem } from "primereact/menuitem";
 import * as nav from "../public/data/navitems";
+import PageNotFound from "./components/PageNotFound";
 
 interface MenuObj {
   label: string | undefined;
@@ -98,6 +99,7 @@ function App() {
           <Route path="/auth" element={<Auth />} />
         </Route>
         <Route path="/todos" element={<Todos />} />
+        <Route path="*" element={<PageNotFound/>}/>
       </Routes>
     </div>
   );
